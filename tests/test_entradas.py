@@ -160,7 +160,7 @@ def test_adapters_de_entrada_no_dependen_de_infraestructura_ni_de_reglas(archivo
     importados = set()
     for nodo in ast.walk(arbol):
         if isinstance(nodo, ast.ImportFrom) and nodo.module:
-            importados.add(nodo.module.split(".")[-1])
+            importados.update(nodo.module.split("."))
         elif isinstance(nodo, ast.Import):
-            importados.update(alias.name.split(".")[-1] for alias in nodo.names)
+            importados.update(seg for alias in nodo.names for seg in alias.name.split("."))
     assert importados.isdisjoint(MODULOS_PROHIBIDOS_EN_ENTRADAS), importados
