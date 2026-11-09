@@ -22,3 +22,19 @@ class NotificadorPedidos(Protocol):
 
     def pedido_confirmado(self, cliente, pedido_id: str, total: float) -> None:
         ...
+
+
+class InventarioPedidos(Protocol):
+    """Puerto de salida: la aplicación necesita validar y reservar stock,
+    no conocer quién lo administra (inventario local, StockCloud, ...).
+
+    Contrato de errores: si no hay disponibilidad o el producto no existe,
+    la implementación lanza ValueError. Fallas técnicas del proveedor: RuntimeError.
+    Solo expone las dos capacidades que el caso de uso usa.
+    """
+
+    def validar_disponibilidad(self, codigo: str, cantidad: int) -> bool:
+        ...
+
+    def reservar(self, codigo: str, cantidad: int) -> None:
+        ...

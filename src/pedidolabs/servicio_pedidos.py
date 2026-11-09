@@ -3,14 +3,19 @@ from .pedido import Pedido
 from .precios import calcular_descuento, calcular_beneficio_fidelidad
 from .envios import calcular_costo_envio
 from .facturacion import generar_factura
-from .puertos import RepositorioPedidos, ProcesadorPago, NotificadorPedidos
+from .puertos import (
+    InventarioPedidos,
+    RepositorioPedidos,
+    ProcesadorPago,
+    NotificadorPedidos,
+)
 
 
 class ServicioPedidos:
 
     def __init__(
         self,
-        inventario,
+        inventario: InventarioPedidos,
         repositorio: RepositorioPedidos,
         procesador_pago: ProcesadorPago,
         notificador: NotificadorPedidos,
