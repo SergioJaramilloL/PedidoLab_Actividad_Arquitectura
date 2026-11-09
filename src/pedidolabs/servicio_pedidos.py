@@ -1,5 +1,6 @@
 from .cliente import Cliente
 from .pedido import Pedido
+from .producto import Producto
 from .precios import calcular_descuento, calcular_beneficio_fidelidad
 from .envios import calcular_costo_envio
 from .facturacion import generar_factura
@@ -9,9 +10,11 @@ from .puertos import (
     ProcesadorPago,
     NotificadorPedidos,
 )
+from .solicitudes import SolicitudPedido
 
 
 class ServicioPedidos:
+    """Servicio de aplicación. Implementa el puerto de entrada ProcesarPedido."""
 
     def __init__(
         self,
@@ -26,6 +29,22 @@ class ServicioPedidos:
         self.notificador = notificador
         self.ultima_factura = None
         self.ultimos_puntos = 0
+
+    def procesar(self, solicitud: SolicitudPedido):
+        """Puerto de entrada ProcesarPedido: traduce el comando a la operación
+        existente para no duplicar ni reescribir el caso de uso."""
+        items = [
+            (Producto(linea.codigo, linea.nombre, linea.precio, linea.peso),
+             linea.cantidad)
+            for linea in solicitud.items
+        ]
+        return self.procesar_pedido(
+            solicitud.pedido_id, solicitud.documento, solicitud.nombre,
+            solicitud.email, solicitud.telefono, solicitud.tipo_cliente,
+            solicitud.calle, solicitud.ciudad, solicitud.departamento,
+            solicitud.codigo_postal, items, solicitud.numero_tarjeta,
+            enviar_confirmacion=solicitud.enviar_confirmacion,
+        )
 
     def procesar_pedido(
         self, pedido_id, documento, nombre, email, telefono, tipo_cliente,

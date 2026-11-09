@@ -1,5 +1,7 @@
 from typing import Protocol
 
+from .solicitudes import SolicitudPedido
+
 
 class RepositorioPedidos(Protocol):
 
@@ -37,4 +39,14 @@ class InventarioPedidos(Protocol):
         ...
 
     def reservar(self, codigo: str, cantidad: int) -> None:
+        ...
+
+
+class ProcesarPedido(Protocol):
+    """Puerto de entrada: capacidad que la aplicación ofrece a sus canales
+    (REST, batch, CLI...). Los adapters de entrada dependen de este contrato,
+    no de ServicioPedidos ni de su firma de 13 parámetros.
+    """
+
+    def procesar(self, solicitud: SolicitudPedido):
         ...
